@@ -15,14 +15,16 @@
     <title>{% block title %}{% endblock %}</title>
   </head>
   <body>
-
-
-    <div class="container">
+    <div class="error">
+      {% if error %}
+        {{error}}
+      {% endif %}
+    </div>
+    
+    <div class="content">
       {% block content %}
       {% endblock content %}
     </div>
-
-    
     <!-- Optional JavaScript; choose one of the two! -->
 
     <!-- Option 1: Bootstrap Bundle with Popper -->

@@ -5,13 +5,26 @@
 {% endblock title %}
 
 {% block content %}
-    <form method="post" class="form">
-        <label>Name:</label>
-        <input type="text" name="name" placeholder="Username">
-        <div class="join">
-            <input type="text" name="code" placeholder="Room Code">
-            <button type="submit">Join Room</button>
+    <div class="flex flex-row">
+        <form method="post" class="form">
+            <div class="flex flex-column">
+                <label for="">Name:</label>
+                <input type="text" name="name" placeholder="Username" value="{{name}}">
+            </div>
+            <div class="join">
+                <input type="text" name="code" placeholder="Room Code" value="{{code}}">
+                <button type="submit">Join Room</button>
+            </div>
+            <button type="submit" name="create" class="create-btn">Create</button>
+        </form>
+        <div class="rooms">
+            <ul>
+                {% for code, data in rooms.items() %}
+                    <li>
+                        <p>Code:{{code}}:{{data}}</p>
+                    </li>
+                {% endfor %}
+            </ul>
         </div>
-        <button type="submit" name="create">Create</button>
-    </form>
+    </div>
 {% endblock content %} 
