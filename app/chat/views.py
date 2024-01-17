@@ -57,6 +57,18 @@ def connect(auth):
     rooms[room]['members'] += 1
 
 
+@socketio.on('message')
+def message(data):
+    room = session.get('room')
+    if room not in rooms:
+        return
+    content = {
+        'name': session.get('name'),
+        'message': data['data']
+    }
+    send(content, to=room)
+    rooms[room]['messages'].append(content)
+
 @socketio.on('disconnect')
 def disconnect():
     room = session.get('room')
