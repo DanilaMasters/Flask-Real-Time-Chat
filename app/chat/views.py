@@ -1,4 +1,5 @@
-from chat import app
+from flask_socketio import join_room, leave_room, send
+from chat import app, socketio
 from flask import redirect, render_template, request, session, url_for
 import uuid
 
@@ -38,3 +39,32 @@ def chat():
     if room is None or session.get('name') is None or room not in rooms:
         return redirect(url_for('home'))
     return render_template('room.html', code=session.get('room'))
+
+
+@socketio.on('connect')
+def connect(auth):
+    room = session.get('room')
+    name = session.get('name')
+    
+    if not room or not name:
+        return
+    if room not in rooms:
+        leave_room(room)
+        return
+    
+    join_room(room)
+    send(message={'name':name, 'message':'has entered the room'}, to=room)
+    rooms[room]['members'] += 1
+
+
+@socketio.on('disconnect')
+def disconnect():
+    room = session.get('room')
+    name = session.get('name')
+
+    if room in rooms:
+        rooms[room]['members'] -= 1
+        if rooms[room]['members'] == 0:
+            del rooms[room]
+
+    send(message={'name': name, 'message': 'has left the room'}, to=room)
